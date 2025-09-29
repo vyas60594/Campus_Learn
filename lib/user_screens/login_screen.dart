@@ -1,4 +1,4 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'signup_screen.dart';
 import 'forgot_password_screen.dart';
@@ -11,14 +11,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  // Simple controllers for the two fields
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // Form key to run basic validation
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  // For showing/hiding password text
   bool _obscurePassword = true;
 
   @override
@@ -30,7 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Same colors used in splash for consistency
     const Color darkCard = Color(0xFF273645);
     const Color accentYellow = Color(0xFFFFD54F);
 
@@ -43,7 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 12),
-              // Simple brand header (mini icon card like splash)
               Row(
                 children: [
                   Stack(
@@ -112,7 +107,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 key: _formKey,
                 child: Column(
                   children: [
-                    // Email field
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
@@ -128,7 +122,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (value == null || value.trim().isEmpty) {
                           return 'Please enter your email';
                         }
-                        // A very basic email check (kept simple for beginners)
                         if (!value.contains('@')) {
                           return 'Please enter a valid email';
                         }
@@ -198,17 +191,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
-                            // TODO: Replace with real authentication
-                            // Navigate to HomeScreen with a smooth transition and
-                            // replace the login screen in the stack.
                             Navigator.of(context).pushReplacement(
                               PageRouteBuilder(
-                                transitionDuration: const Duration(milliseconds: 450),
-                                pageBuilder: (context, animation, secondaryAnimation) => const HomeScreen(),
-                                transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                  final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
-                                  final offsetTween = Tween<Offset>(begin: const Offset(0, 0.03), end: Offset.zero)
-                                      .chain(CurveTween(curve: Curves.easeOutCubic));
+                                transitionDuration:
+                                    const Duration(milliseconds: 450),
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        const HomeScreen(),
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  final curved = CurvedAnimation(
+                                      parent: animation,
+                                      curve: Curves.easeOutCubic);
+                                  final offsetTween = Tween<Offset>(
+                                          begin: const Offset(0, 0.03),
+                                          end: Offset.zero)
+                                      .chain(CurveTween(
+                                          curve: Curves.easeOutCubic));
                                   return FadeTransition(
                                     opacity: curved,
                                     child: SlideTransition(
@@ -223,7 +222,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         child: const Text(
                           'Sign In',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
                         ),
                       ),
                     ),
@@ -239,7 +239,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    // Simple outlined button to illustrate another action (e.g., create account)
                     SizedBox(
                       width: double.infinity,
                       height: 48,
@@ -269,4 +268,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-
