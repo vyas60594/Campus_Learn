@@ -1,19 +1,43 @@
 name: campus_learn
-description: "A new Flutter project."
-publish_to: 'none'
-version: 0.1.0
+description: A simple campus learning app (materials, Q&A, announcements, profile)
+publish_to: "none"
+
+version: 1.0.0+1
 
 environment:
-  sdk: ^3.9.2
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
+  cupertino_icons: ^1.0.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.4
+  image: ^4.5.4
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
+    - assets/images/user_dashboard/profile.jpeg
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/icons/app_icon.png
+  min_sdk_android: 21
+  web:
+    generate: true
+    image_path: assets/icons/app_icon.png
+    background_color: "#3A7BFF"
+    theme_color: "#7A53FF"
+  macos:
+    generate: true
+    image_path: assets/icons/app_icon.png
+  windows:
+    generate: true
+    image_path: assets/icons/app_icon.png
