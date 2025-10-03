@@ -1,0 +1,6 @@
+{
+  "dart.projectSearchDepth": 10,
+  "dart.flutterSdkPath": null,
+  "dart.flutterHotReloadOnSave": "all",
+  "editor.formatOnSave": true
+}
