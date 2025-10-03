@@ -17,6 +17,31 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _obscurePassword = true;
+  bool _emailHasError = false;
+  bool _passwordHasError = false;
+
+  String? _validateEmail(String? value) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty) return 'Please enter your email';
+    if (!text.contains('@')) return 'Please enter a valid email';
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    final text = value ?? '';
+    if (text.isEmpty) return 'Please enter your password';
+    if (text.length < 6) return 'Password must be at least 6 characters';
+    return null;
+  }
+
+  void _recomputeErrors() {
+    final emailError = _validateEmail(_emailController.text);
+    final passError = _validatePassword(_passwordController.text);
+    setState(() {
+      _emailHasError = emailError != null;
+      _passwordHasError = passError != null;
+    });
+  }
 
   @override
   void dispose() {
@@ -105,6 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 24),
               Form(
                 key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   children: [
                     TextFormField(
@@ -113,20 +139,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: InputDecoration(
                         labelText: 'Email',
                         hintText: 'you@example.com',
-                        prefixIcon: const Icon(Icons.email_outlined),
+                        prefixIcon: Icon(
+                          Icons.email_outlined,
+                          color: _emailHasError ? Colors.red : null,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'Please enter your email';
-                        }
-                        if (!value.contains('@')) {
-                          return 'Please enter a valid email';
-                        }
-                        return null;
-                      },
+                      validator: (value) => _validateEmail(value),
+                      onChanged: (_) => _recomputeErrors(),
                     ),
                     const SizedBox(height: 16),
                     // Password field
@@ -135,7 +157,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
                         labelText: 'Password',
-                        prefixIcon: const Icon(Icons.lock_outline),
+                        prefixIcon: Icon(
+                          Icons.lock_outline,
+                          color: _passwordHasError ? Colors.red : null,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -152,15 +177,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
-                        }
-                        if (value.length < 6) {
-                          return 'Password must be at least 6 characters';
-                        }
-                        return null;
-                      },
+                      validator: (value) => _validatePassword(value),
+                      onChanged: (_) => _recomputeErrors(),
                     ),
                     const SizedBox(height: 12),
                     Align(
@@ -190,7 +208,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           elevation: 0,
                         ),
                         onPressed: () {
-                          if (_formKey.currentState!.validate()) {
+                          final valid = _formKey.currentState!.validate();
+                          _recomputeErrors();
+                          if (valid) {
                             Navigator.of(context).pushReplacement(
                               PageRouteBuilder(
                                 transitionDuration:
