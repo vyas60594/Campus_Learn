@@ -3,12 +3,64 @@ import 'materials_page.dart';
 import 'announcements_page.dart';
 import 'qna_page.dart';
 import 'profile_page.dart';
+import '../ui_shared/app_theme.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _BrandLogo extends StatelessWidget {
+  final double size;
+  const _BrandLogo({this.size = 96});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x1A000000),
+            blurRadius: 24,
+            offset: Offset(0, 12),
+          ),
+        ],
+        borderRadius: BorderRadius.circular(size * 0.25),
+      ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              color: AppTheme.primary,
+              borderRadius: BorderRadius.circular(size * 0.25),
+            ),
+            child: Icon(
+              Icons.school_rounded,
+              size: size * 0.45,
+              color: Colors.white,
+            ),
+          ),
+          Positioned(
+            right: size * 0.08,
+            top: size * 0.08,
+            child: Container(
+              width: size * 0.12,
+              height: size * 0.29,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFFD54F),
+                borderRadius: BorderRadius.circular(size * 0.08),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -51,79 +103,38 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: false,
         titleSpacing: 16,
         title: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Premium brand mark
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: darkCard,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x14000000),
-                        blurRadius: 14,
-                        offset: Offset(0, 8),
-                      ),
-                    ],
-                  ),
-                ),
-                const Positioned.fill(
-                  child: Center(
-                    child: Icon(Icons.school_rounded,
-                        color: Colors.white, size: 20),
-                  ),
-                ),
-                Positioned(
-                  right: 2,
-                  top: 2,
-                  child: Container(
-                    width: 8,
-                    height: 18,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFFFD54F),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(width: 10),
-            const Text(
+          children: const [
+            _BrandLogo(size: 40),
+            SizedBox(width: 12),
+            Text(
               'CampusLearn',
               style: TextStyle(
-                color: darkCard,
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 0.2,
+                color: Color(0xFF1D2733),
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(18),
+            padding: const EdgeInsets.only(right: 16.0),
+            child: GestureDetector(
               onTap: () {
                 setState(() => _currentIndex = 4); // go to Profile tab
               },
               child: Container(
-                width: 36,
-                height: 36,
+                width: 42,
+                height: 42,
                 decoration: BoxDecoration(
+                  shape: BoxShape.circle,
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(18),
-                  border: Border.all(color: Colors.grey.shade200),
+                  border: Border.all(color: Colors.grey.shade300, width: 2),
                   boxShadow: const [
                     BoxShadow(
-                      color: Color(0x0A000000),
+                      color: Color(0x12000000),
                       blurRadius: 10,
-                      offset: Offset(0, 6),
+                      offset: Offset(0, 4),
                     ),
                   ],
                 ),
@@ -132,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     avatarAsset,
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) =>
-                        const Icon(Icons.person, color: darkCard),
+                        const Icon(Icons.person, color: Color(0xFF1D2733)),
                   ),
                 ),
               ),
@@ -769,47 +780,55 @@ class _WelcomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedEntrance(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 84, vertical: 20),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.white, Colors.grey.shade100],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(color: Colors.grey.shade200, width: 1.5),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
+      child: Row(
+        children: [
+          Container(
+            width: 52,
+            height: 52,
+            decoration: BoxDecoration(
+              color: const Color(0xFF273645),
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x1A000000),
+                  blurRadius: 16,
+                  offset: Offset(0, 8),
+                ),
+              ],
             ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Welcome back,',
+            alignment: Alignment.center,
+            child: const Text(
+              'R',
               style: TextStyle(
-                color: Colors.black54,
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            const SizedBox(height: 6),
-            const Text(
-              'Rajan Vyas',
-              style: TextStyle(
-                color: Color(0xFF1D2733),
-                fontSize: 28,
+                color: Colors.white,
+                fontSize: 24,
                 fontWeight: FontWeight.bold,
-                letterSpacing: -0.5,
               ),
             ),
-          ],
-        ),
+          ),
+          const SizedBox(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Welcome back,',
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Text(
+                'Rajan Vyas',
+                style: TextStyle(
+                  color: Color(0xFF1D2733),
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
