@@ -787,79 +787,6 @@ class _AnimatedEntranceState extends State<AnimatedEntrance>
   }
 }
 
-/// A widget that applies an interactive 3D tilt effect to its child.
-class InteractiveTilt extends StatefulWidget {
-  final Widget child;
-  final GestureTapCallback? onTap;
-  const InteractiveTilt({super.key, required this.child, this.onTap});
-
-  @override
-  State<InteractiveTilt> createState() => _InteractiveTiltState();
-}
-
-class _InteractiveTiltState extends State<InteractiveTilt>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-  Offset _offset = Offset.zero;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 200),
-      lowerBound: -1,
-      upperBound: 1,
-    );
-    _animation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _handleHover(PointerEvent details) {
-    final size = context.size;
-    if (size == null) return;
-    final x = (details.localPosition.dx / size.width) * 2 - 1;
-    final y = (details.localPosition.dy / size.height) * 2 - 1;
-    setState(() {
-      _offset = Offset(x, y);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (details) => _controller.forward(),
-      onExit: (details) => _controller.reverse(),
-      onHover: _handleHover,
-      child: GestureDetector(
-        onTap: widget.onTap,
-        child: AnimatedBuilder(
-          animation: _animation,
-          builder: (context, child) {
-            final transform = Matrix4.identity()
-              ..setEntry(3, 2, 0.001) // Perspective
-              ..rotateY(_offset.dx * _animation.value * -0.15)
-              ..rotateX(_offset.dy * _animation.value * 0.15);
-            return Transform(
-              transform: transform,
-              alignment: FractionalOffset.center,
-              child: widget.child,
-            );
-          },
-          child: widget.child,
-        ),
-      ),
-    );
-  }
-}
 
 class _WelcomeHeader extends StatelessWidget {
   const _WelcomeHeader();
@@ -977,10 +904,7 @@ class _FeaturedScroller extends StatelessWidget {
           final cardData = cards[index];
           return AnimatedEntrance(
             delay: Duration(milliseconds: 100 * index),
-            child: InteractiveTilt(
-              onTap: () {},
-              child: _FeaturedCard(data: cardData),
-            ),
+            child: _FeaturedCard(data: cardData),
           );
         },
       ),
