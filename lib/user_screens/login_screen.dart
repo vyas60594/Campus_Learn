@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'home_screen.dart';
 import 'signup_screen.dart';
 import 'forgot_password_screen.dart';
+import '../admin_screens/admin_login_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -17,31 +18,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _obscurePassword = true;
-  bool _emailHasError = false;
-  bool _passwordHasError = false;
-
-  String? _validateEmail(String? value) {
-    final text = value?.trim() ?? '';
-    if (text.isEmpty) return 'Please enter your email';
-    if (!text.contains('@')) return 'Please enter a valid email';
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    final text = value ?? '';
-    if (text.isEmpty) return 'Please enter your password';
-    if (text.length < 6) return 'Password must be at least 6 characters';
-    return null;
-  }
-
-  void _recomputeErrors() {
-    final emailError = _validateEmail(_emailController.text);
-    final passError = _validatePassword(_passwordController.text);
-    setState(() {
-      _emailHasError = emailError != null;
-      _passwordHasError = passError != null;
-    });
-  }
 
   @override
   void dispose() {
@@ -139,28 +115,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: InputDecoration(
                         labelText: 'Email',
                         hintText: 'you@example.com',
-                        prefixIcon: Icon(
-                          Icons.email_outlined,
-                          color: _emailHasError ? Colors.red : null,
-                        ),
+                        prefixIcon: const Icon(Icons.email_outlined),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      validator: (value) => _validateEmail(value),
-                      onChanged: (_) => _recomputeErrors(),
+                      validator: (value) {
+                        final text = value?.trim() ?? '';
+                        if (text.isEmpty) return 'Please enter your email';
+                        if (!text.contains('@'))
+                          return 'Please enter a valid email';
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 16),
-                    // Password field
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
                         labelText: 'Password',
-                        prefixIcon: Icon(
-                          Icons.lock_outline,
-                          color: _passwordHasError ? Colors.red : null,
-                        ),
+                        prefixIcon: const Icon(Icons.lock_outline),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -177,8 +151,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           },
                         ),
                       ),
-                      validator: (value) => _validatePassword(value),
-                      onChanged: (_) => _recomputeErrors(),
+                      validator: (value) {
+                        final text = value ?? '';
+                        if (text.isEmpty) return 'Please enter your password';
+                        if (text.length < 6)
+                          return 'Password must be at least 6 characters';
+                        return null;
+                      },
                     ),
                     const SizedBox(height: 12),
                     Align(
@@ -208,9 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           elevation: 0,
                         ),
                         onPressed: () {
-                          final valid = _formKey.currentState!.validate();
-                          _recomputeErrors();
-                          if (valid) {
+                          if (_formKey.currentState!.validate()) {
                             Navigator.of(context).pushReplacement(
                               PageRouteBuilder(
                                 transitionDuration:
@@ -276,6 +253,23 @@ class _LoginScreenState extends State<LoginScreen> {
                           );
                         },
                         child: const Text('Create a new account'),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => const AdminLoginScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Admin Access',
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 14,
+                        ),
                       ),
                     ),
                   ],
