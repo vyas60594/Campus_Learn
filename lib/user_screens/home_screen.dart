@@ -775,7 +775,7 @@ class _WelcomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedEntrance(
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
@@ -787,40 +787,24 @@ class _WelcomeHeader extends StatelessWidget {
             ),
           ],
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Welcome back,',
-                    style: TextStyle(
-                      color: Colors.grey.shade700,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  const Text(
-                    'Rajan Vyas',
-                    style: TextStyle(
-                      color: Color(0xFF273645),
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+            Text(
+              'Welcome back,',
+              style: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(width: 16),
-            CircleAvatar(
-              radius: 28,
-              backgroundColor: const Color(0xFF273645).withOpacity(0.08),
-              child: const Icon(
-                Icons.person_rounded,
+            const SizedBox(height: 6),
+            const Text(
+              'Rajan Vyas',
+              style: TextStyle(
                 color: Color(0xFF273645),
-                size: 30,
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
