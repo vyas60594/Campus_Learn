@@ -74,7 +74,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const Positioned.fill(
                   child: Center(
-                    child: Icon(Icons.school_rounded, color: Colors.white, size: 20),
+                    child: Icon(Icons.school_rounded,
+                        color: Colors.white, size: 20),
                   ),
                 ),
                 Positioned(
@@ -130,7 +131,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Image.asset(
                     avatarAsset,
                     fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => const Icon(Icons.person, color: darkCard),
+                    errorBuilder: (_, __, ___) =>
+                        const Icon(Icons.person, color: darkCard),
                   ),
                 ),
               ),
@@ -182,8 +184,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  
 }
 
 // --- Tabs ---
@@ -200,7 +200,6 @@ class _HomeTab extends StatelessWidget {
     required this.announceAsset,
     required this.qaAsset,
   });
-
 
   @override
   Widget build(BuildContext context) {
@@ -241,7 +240,8 @@ class _HomeTab extends StatelessWidget {
           const SizedBox(height: 20),
 
           // Featured materials
-          const _SectionHeader(title: 'Featured Materials', actionText: 'See all'),
+          const _SectionHeader(
+              title: 'Featured Materials', actionText: 'See all'),
           const SizedBox(height: 12),
           _FeaturedScroller(
             cards: [
@@ -339,8 +339,6 @@ class _AssetIcon extends StatelessWidget {
     );
   }
 }
-
- 
 
 class _UpdateItem extends StatelessWidget {
   final _AssetIcon icon;
@@ -524,7 +522,6 @@ class _CategoryChips extends StatelessWidget {
   }
 }
 
-
 class _FeaturedCardData {
   final String title;
   final String subtitle;
@@ -537,7 +534,6 @@ class _FeaturedCardData {
     required this.color,
   });
 }
-
 
 class _QuickActionsRow extends StatelessWidget {
   @override
@@ -767,7 +763,6 @@ class _AnimatedEntranceState extends State<AnimatedEntrance>
   }
 }
 
-
 class _WelcomeHeader extends StatelessWidget {
   const _WelcomeHeader();
 
@@ -775,25 +770,30 @@ class _WelcomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedEntrance(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 84, vertical: 20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          gradient: LinearGradient(
+            colors: [Colors.white, Colors.grey.shade100],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.grey.shade200, width: 1.5),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
+              color: Colors.grey.withOpacity(0.1),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
             ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Welcome back,',
               style: TextStyle(
-                color: Colors.grey.shade700,
+                color: Colors.black54,
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
@@ -802,9 +802,10 @@ class _WelcomeHeader extends StatelessWidget {
             const Text(
               'Rajan Vyas',
               style: TextStyle(
-                color: Color(0xFF273645),
+                color: Color(0xFF1D2733),
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
+                letterSpacing: -0.5,
               ),
             ),
           ],
@@ -900,11 +901,13 @@ class _FeaturedCard extends StatelessWidget {
                 const SizedBox(height: 10),
                 Row(
                   children: const [
-                    Icon(Icons.star_rounded, color: Color(0xFFFFB020), size: 18),
+                    Icon(Icons.star_rounded,
+                        color: Color(0xFFFFB020), size: 18),
                     SizedBox(width: 4),
                     Text('4.8', style: TextStyle(fontWeight: FontWeight.w700)),
                     SizedBox(width: 8),
-                    Text('• 2.3k views', style: TextStyle(color: Colors.black54)),
+                    Text('• 2.3k views',
+                        style: TextStyle(color: Colors.black54)),
                   ],
                 )
               ],
@@ -915,4 +918,3 @@ class _FeaturedCard extends StatelessWidget {
     );
   }
 }
-
