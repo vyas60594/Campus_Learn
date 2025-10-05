@@ -220,22 +220,17 @@ class _HomeTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Animated Welcome Header
-          const _WelcomeHeader(),
+          _WelcomeHeader(),
 
           const SizedBox(height: 16),
 
           // Search card
-          const AnimatedEntrance(
-            delay: Duration(milliseconds: 300),
-            child: _SearchCard(),
-          ),
+          const _SearchCard(),
 
           const SizedBox(height: 12),
 
           // Category chips
-          AnimatedEntrance(
-            delay: const Duration(milliseconds: 400),
-            child: const _CategoryChips(
+          const _CategoryChips(
               categories: [
                 'All',
                 'Programming',
@@ -246,12 +241,10 @@ class _HomeTab extends StatelessWidget {
                 'Business'
               ],
             ),
-          ),
-
           const SizedBox(height: 20),
 
           // Featured materials
-          const _SectionHeader(
+          _SectionHeader(
               title: 'Featured Materials', actionText: 'See all'),
           const SizedBox(height: 12),
           _FeaturedScroller(
@@ -711,125 +704,61 @@ class _ProfileTab extends StatelessWidget {
   }
 }
 
-// --- NEW ANIMATED AND PROFESSIONAL WIDGETS ---
-
-/// A reusable widget that animates its child's entrance with a fade and slide effect.
-class AnimatedEntrance extends StatefulWidget {
-  final Widget child;
-  final Duration delay;
-  final Duration duration;
-  final Offset offset;
-
-  const AnimatedEntrance({
-    super.key,
-    required this.child,
-    this.delay = Duration.zero,
-    this.duration = const Duration(milliseconds: 400),
-    this.offset = const Offset(0, 32),
-  });
-
-  @override
-  State<AnimatedEntrance> createState() => _AnimatedEntranceState();
-}
-
-class _AnimatedEntranceState extends State<AnimatedEntrance>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _opacity;
-  late Animation<Offset> _offset;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this, duration: widget.duration);
-    _opacity = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
-    _offset = Tween<Offset>(begin: widget.offset, end: Offset.zero).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
-
-    Future.delayed(widget.delay, () {
-      if (mounted) {
-        _controller.forward();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _opacity,
-      child: SlideTransition(
-        position: _offset,
-        child: widget.child,
-      ),
-    );
-  }
-}
 
 class _WelcomeHeader extends StatelessWidget {
-  const _WelcomeHeader();
+  const _WelcomeHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedEntrance(
-      child: Row(
-        children: [
-          Container(
-            width: 52,
-            height: 52,
-            decoration: BoxDecoration(
-              color: const Color(0xFF273645),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x1A000000),
-                  blurRadius: 16,
-                  offset: Offset(0, 8),
-                ),
-              ],
+    return Row(
+      children: [
+        Container(
+          width: 52,
+          height: 52,
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 24, 50, 48),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x1A000000),
+                blurRadius: 16,
+                offset: Offset(0, 8),
+              ),
+            ],
+          ),
+          alignment: Alignment.center,
+          child: const Text(
+            'R',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
-            alignment: Alignment.center,
-            child: const Text(
-              'R',
+          ),
+        ),
+        const SizedBox(width: 16),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Welcome back,',
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.grey.shade600,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const Text(
+              'Rajan Vyas',
+              style: TextStyle(
+                color: Color(0xFF1D2733),
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-          ),
-          const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Welcome back,',
-                style: TextStyle(
-                  color: Colors.grey.shade600,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const Text(
-                'Rajan Vyas',
-                style: TextStyle(
-                  color: Color(0xFF1D2733),
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -848,10 +777,7 @@ class _FeaturedScroller extends StatelessWidget {
         separatorBuilder: (_, __) => const SizedBox(width: 12),
         itemBuilder: (context, index) {
           final cardData = cards[index];
-          return AnimatedEntrance(
-            delay: Duration(milliseconds: 100 * index),
-            child: _FeaturedCard(data: cardData),
-          );
+          return _FeaturedCard(data: cardData);
         },
       ),
     );
