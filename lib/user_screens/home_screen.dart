@@ -215,15 +215,27 @@ class _HomeTab extends StatelessWidget {
           const SizedBox(height: 16),
 
           // Search card
-          const _SearchCard(),
+          const AnimatedEntrance(
+            delay: Duration(milliseconds: 300),
+            child: _SearchCard(),
+          ),
 
           const SizedBox(height: 12),
 
           // Category chips
-          const _CategoryChips(
-            categories: [
-              'All', 'Programming', 'Math', 'Electronics', 'Physics', 'English', 'Business'
-            ],
+          AnimatedEntrance(
+            delay: const Duration(milliseconds: 400),
+            child: const _CategoryChips(
+              categories: [
+                'All',
+                'Programming',
+                'Math',
+                'Electronics',
+                'Physics',
+                'English',
+                'Business'
+              ],
+            ),
           ),
 
           const SizedBox(height: 20),
@@ -430,33 +442,37 @@ class _SearchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: const [
           BoxShadow(
             color: Color(0x12000000),
-            blurRadius: 18,
-            offset: Offset(0, 10),
+            blurRadius: 20,
+            offset: Offset(0, 8),
           ),
         ],
       ),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Row(
         children: [
-          const Icon(Icons.search_rounded, color: Color(0xFF273645)),
-          const SizedBox(width: 8),
+          const SizedBox(width: 12),
+          const Icon(Icons.search_rounded, color: Colors.black54, size: 22),
+          const SizedBox(width: 12),
           const Expanded(
             child: Text(
               'Search subjects, notes, papers...',
-              style: TextStyle(color: Colors.black54),
+              style: TextStyle(color: Colors.black54, fontSize: 16),
             ),
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.tune_rounded),
-            color: Colors.black54,
-          )
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF273645).withOpacity(0.05),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(Icons.tune_rounded, color: Color(0xFF273645)),
+          ),
         ],
       ),
     );
@@ -508,42 +524,6 @@ class _CategoryChips extends StatelessWidget {
   }
 }
 
-class _HeroStatChip extends StatelessWidget {
-  final String label;
-  final String value;
-  const _HeroStatChip({required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Colors.white24),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: TextStyle(
-              color: Colors.white.withOpacity(0.85),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class _FeaturedCardData {
   final String title;
@@ -795,91 +775,41 @@ class _WelcomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedEntrance(
       child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
-              color: Color(0x12000000),
-              blurRadius: 24,
-              offset: Offset(0, 12),
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
             ),
           ],
         ),
-        padding: const EdgeInsets.all(18),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const AnimatedEntrance(
-              offset: Offset(0, 16),
-              child: Text(
-                'Welcome back,',
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16,
-                ),
+            Text(
+              'Welcome back,',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
               ),
             ),
             const SizedBox(height: 4),
-            const AnimatedEntrance(
-              delay: Duration(milliseconds: 100),
-              offset: Offset(0, 16),
-              child: Text(
-                'Rajan Vyas',
-                style: TextStyle(
-                  color: Color(0xFF273645),
-                  fontSize: 28,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            AnimatedEntrance(
-              delay: const Duration(milliseconds: 200),
-              offset: const Offset(0, 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  _StatItem(count: '97', label: 'Materials'),
-                  _StatItem(count: '15', label: 'Updates'),
-                  _StatItem(count: '45', label: 'Q&A'),
-                ],
+            const Text(
+              'Rajan Vyas',
+              style: TextStyle(
+                color: Color(0xFF273645),
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _StatItem extends StatelessWidget {
-  final String count;
-  final String label;
-  const _StatItem({required this.count, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          count,
-          style: const TextStyle(
-            color: Color(0xFF273645),
-            fontSize: 22,
-            fontWeight: FontWeight.w800,
-          ),
-        ),
-        const SizedBox(height: 2),
-        Text(
-          label,
-          style: const TextStyle(
-            color: Colors.black54,
-            fontSize: 14,
-          ),
-        ),
-      ],
     );
   }
 }
