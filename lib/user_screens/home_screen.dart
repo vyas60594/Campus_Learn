@@ -775,36 +775,52 @@ class _WelcomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedEntrance(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
-              blurRadius: 15,
-              offset: const Offset(0, 5),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
             ),
           ],
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            Text(
-              'Welcome back,',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Welcome back,',
+                    style: TextStyle(
+                      color: Colors.grey.shade700,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Rajan Vyas',
+                    style: TextStyle(
+                      color: Color(0xFF273645),
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 4),
-            const Text(
-              'Rajan Vyas',
-              style: TextStyle(
+            const SizedBox(width: 16),
+            CircleAvatar(
+              radius: 28,
+              backgroundColor: const Color(0xFF273645).withOpacity(0.08),
+              child: const Icon(
+                Icons.person_rounded,
                 color: Color(0xFF273645),
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
+                size: 30,
               ),
             ),
           ],
