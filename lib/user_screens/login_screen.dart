@@ -106,7 +106,6 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 24),
               Form(
                 key: _formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   children: [
                     TextFormField(
