@@ -796,94 +796,90 @@ class _WelcomeHeader extends StatelessWidget {
     return AnimatedEntrance(
       child: Container(
         decoration: BoxDecoration(
+          color: Colors.white,
           borderRadius: BorderRadius.circular(20),
-          gradient: const LinearGradient(
-            colors: [Color(0xFF2E3B4E), Color(0xFF1B2635)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
           boxShadow: const [
             BoxShadow(
-              color: Color(0x1F000000),
+              color: Color(0x12000000),
               blurRadius: 24,
               offset: Offset(0, 12),
             ),
           ],
         ),
         padding: const EdgeInsets.all(18),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const AnimatedEntrance(
-                    offset: Offset(0, 16),
-                    child: Text(
-                      'Welcome back',
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  const AnimatedEntrance(
-                    delay: Duration(milliseconds: 100),
-                    offset: Offset(0, 16),
-                    child: Text(
-                      'Rajan Vyas',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 26,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.2,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  AnimatedEntrance(
-                    delay: const Duration(milliseconds: 200),
-                    offset: const Offset(0, 16),
-                    child: Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: const [
-                        _HeroStatChip(label: 'Materials', value: '97'),
-                        _HeroStatChip(label: 'Updates', value: '15'),
-                        _HeroStatChip(label: 'Q&A', value: '45'),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  AnimatedEntrance(
-                    delay: const Duration(milliseconds: 300),
-                    offset: const Offset(0, 16),
-                    child: SizedBox(
-                      height: 38,
-                      child: ElevatedButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.explore_rounded, size: 18),
-                        label: const Text('Explore new content'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: const Color(0xFF273645),
-                          elevation: 0,
-                          padding: const EdgeInsets.symmetric(horizontal: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
+            const AnimatedEntrance(
+              offset: Offset(0, 16),
+              child: Text(
+                'Welcome back,',
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            const SizedBox(height: 4),
+            const AnimatedEntrance(
+              delay: Duration(milliseconds: 100),
+              offset: Offset(0, 16),
+              child: Text(
+                'Rajan Vyas',
+                style: TextStyle(
+                  color: Color(0xFF273645),
+                  fontSize: 28,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            AnimatedEntrance(
+              delay: const Duration(milliseconds: 200),
+              offset: const Offset(0, 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: const [
+                  _StatItem(count: '97', label: 'Materials'),
+                  _StatItem(count: '15', label: 'Updates'),
+                  _StatItem(count: '45', label: 'Q&A'),
                 ],
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class _StatItem extends StatelessWidget {
+  final String count;
+  final String label;
+  const _StatItem({required this.count, required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          count,
+          style: const TextStyle(
+            color: Color(0xFF273645),
+            fontSize: 22,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+        const SizedBox(height: 2),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.black54,
+            fontSize: 14,
+          ),
+        ),
+      ],
     );
   }
 }
