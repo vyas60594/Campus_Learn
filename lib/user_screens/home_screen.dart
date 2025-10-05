@@ -209,82 +209,8 @@ class _HomeTab extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Gradient hero header with CTA
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              gradient: const LinearGradient(
-                colors: [Color(0xFF2E3B4E), Color(0xFF1B2635)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x1F000000),
-                  blurRadius: 24,
-                  offset: Offset(0, 12),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.all(18),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Welcome back',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.85),
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      const Text(
-                        'Rajan Vyas',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 26,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 0.2,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: const [
-                          _HeroStatChip(label: 'Materials', value: '97'),
-                          _HeroStatChip(label: 'Updates', value: '15'),
-                          _HeroStatChip(label: 'Q&A', value: '45'),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      SizedBox(
-                        height: 38,
-                        child: ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.explore_rounded, size: 18),
-                          label: const Text('Explore new content'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: const Color(0xFF273645),
-                            elevation: 0,
-                            padding: const EdgeInsets.symmetric(horizontal: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Animated Welcome Header
+          const _WelcomeHeader(),
 
           const SizedBox(height: 16),
 
@@ -632,97 +558,6 @@ class _FeaturedCardData {
   });
 }
 
-class _FeaturedScroller extends StatelessWidget {
-  final List<_FeaturedCardData> cards;
-  const _FeaturedScroller({required this.cards});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 150,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: cards.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
-        itemBuilder: (context, index) {
-          final c = cards[index];
-          return Container(
-            width: 260,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [c.color.withOpacity(0.12), Colors.white],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.grey.shade200),
-              boxShadow: const [
-                BoxShadow(
-                  color: Color(0x12000000),
-                  blurRadius: 18,
-                  offset: Offset(0, 10),
-                ),
-              ],
-            ),
-            padding: const EdgeInsets.all(14),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: c.color,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: const [
-                      BoxShadow(
-                        color: Color(0x14000000),
-                        blurRadius: 14,
-                        offset: Offset(0, 8),
-                      ),
-                    ],
-                  ),
-                  child: Icon(c.icon, color: Colors.white),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        c.title,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w800,
-                          color: Color(0xFF273645),
-                        ),
-                      ),
-                      const SizedBox(height: 6),
-                      Text(
-                        c.subtitle,
-                        style: TextStyle(color: Colors.grey.shade700, fontSize: 12),
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: const [
-                          Icon(Icons.star_rounded, color: Color(0xFFFFB020), size: 18),
-                          SizedBox(width: 4),
-                          Text('4.8', style: TextStyle(fontWeight: FontWeight.w700)),
-                          SizedBox(width: 8),
-                          Text('• 2.3k views', style: TextStyle(color: Colors.black54)),
-                        ],
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
 
 class _QuickActionsRow extends StatelessWidget {
   @override
@@ -889,56 +724,235 @@ class _ProfileTab extends StatelessWidget {
   }
 }
 
-class _EmptyState extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String message;
-  final String cta;
+// --- NEW ANIMATED AND PROFESSIONAL WIDGETS ---
 
-  const _EmptyState({
-    required this.icon,
-    required this.title,
-    required this.message,
-    required this.cta,
+/// A reusable widget that animates its child's entrance with a fade and slide effect.
+class AnimatedEntrance extends StatefulWidget {
+  final Widget child;
+  final Duration delay;
+  final Duration duration;
+  final Offset offset;
+
+  const AnimatedEntrance({
+    super.key,
+    required this.child,
+    this.delay = Duration.zero,
+    this.duration = const Duration(milliseconds: 400),
+    this.offset = const Offset(0, 32),
   });
 
   @override
+  State<AnimatedEntrance> createState() => _AnimatedEntranceState();
+}
+
+class _AnimatedEntranceState extends State<AnimatedEntrance>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _opacity;
+  late Animation<Offset> _offset;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(vsync: this, duration: widget.duration);
+    _opacity = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+    _offset = Tween<Offset>(begin: widget.offset, end: Offset.zero).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+
+    Future.delayed(widget.delay, () {
+      if (mounted) {
+        _controller.forward();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return FadeTransition(
+      opacity: _opacity,
+      child: SlideTransition(
+        position: _offset,
+        child: widget.child,
+      ),
+    );
+  }
+}
+
+/// A widget that applies an interactive 3D tilt effect to its child.
+class InteractiveTilt extends StatefulWidget {
+  final Widget child;
+  final GestureTapCallback? onTap;
+  const InteractiveTilt({super.key, required this.child, this.onTap});
+
+  @override
+  State<InteractiveTilt> createState() => _InteractiveTiltState();
+}
+
+class _InteractiveTiltState extends State<InteractiveTilt>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+  Offset _offset = Offset.zero;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 200),
+      lowerBound: -1,
+      upperBound: 1,
+    );
+    _animation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _handleHover(PointerEvent details) {
+    final size = context.size;
+    if (size == null) return;
+    final x = (details.localPosition.dx / size.width) * 2 - 1;
+    final y = (details.localPosition.dy / size.height) * 2 - 1;
+    setState(() {
+      _offset = Offset(x, y);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (details) => _controller.forward(),
+      onExit: (details) => _controller.reverse(),
+      onHover: _handleHover,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedBuilder(
+          animation: _animation,
+          builder: (context, child) {
+            final transform = Matrix4.identity()
+              ..setEntry(3, 2, 0.001) // Perspective
+              ..rotateY(_offset.dx * _animation.value * -0.15)
+              ..rotateX(_offset.dy * _animation.value * 0.15);
+            return Transform(
+              transform: transform,
+              alignment: FractionalOffset.center,
+              child: widget.child,
+            );
+          },
+          child: widget.child,
+        ),
+      ),
+    );
+  }
+}
+
+class _WelcomeHeader extends StatelessWidget {
+  const _WelcomeHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedEntrance(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: const LinearGradient(
+            colors: [Color(0xFF2E3B4E), Color(0xFF1B2635)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x1F000000),
+              blurRadius: 24,
+              offset: Offset(0, 12),
+            ),
+          ],
+        ),
+        padding: const EdgeInsets.all(18),
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: const Color(0xFF273645).withOpacity(0.08),
-                borderRadius: BorderRadius.circular(16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const AnimatedEntrance(
+                    offset: Offset(0, 16),
+                    child: Text(
+                      'Welcome back',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  const AnimatedEntrance(
+                    delay: Duration(milliseconds: 100),
+                    offset: Offset(0, 16),
+                    child: Text(
+                      'Rajan Vyas',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 26,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  AnimatedEntrance(
+                    delay: const Duration(milliseconds: 200),
+                    offset: const Offset(0, 16),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: const [
+                        _HeroStatChip(label: 'Materials', value: '97'),
+                        _HeroStatChip(label: 'Updates', value: '15'),
+                        _HeroStatChip(label: 'Q&A', value: '45'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  AnimatedEntrance(
+                    delay: const Duration(milliseconds: 300),
+                    offset: const Offset(0, 16),
+                    child: SizedBox(
+                      height: 38,
+                      child: ElevatedButton.icon(
+                        onPressed: () {},
+                        icon: const Icon(Icons.explore_rounded, size: 18),
+                        label: const Text('Explore new content'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: const Color(0xFF273645),
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(horizontal: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              child: Icon(icon, size: 40, color: const Color(0xFF273645)),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF273645),
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              message,
-              style: TextStyle(color: Colors.grey.shade700),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16),
-            OutlinedButton(
-              onPressed: () {},
-              child: Text(cta),
             ),
           ],
         ),
@@ -947,4 +961,108 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
- 
+class _FeaturedScroller extends StatelessWidget {
+  final List<_FeaturedCardData> cards;
+  const _FeaturedScroller({required this.cards});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 150,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: cards.length,
+        separatorBuilder: (_, __) => const SizedBox(width: 12),
+        itemBuilder: (context, index) {
+          final cardData = cards[index];
+          return AnimatedEntrance(
+            delay: Duration(milliseconds: 100 * index),
+            child: InteractiveTilt(
+              onTap: () {},
+              child: _FeaturedCard(data: cardData),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class _FeaturedCard extends StatelessWidget {
+  final _FeaturedCardData data;
+  const _FeaturedCard({required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 260,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade200),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x12000000),
+            blurRadius: 24,
+            offset: Offset(0, 12),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(14),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: data.color,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: data.color.withOpacity(0.4),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+            ),
+            child: Icon(data.icon, color: Colors.white, size: 24),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  data.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 15,
+                    color: Color(0xFF273645),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  data.subtitle,
+                  style: TextStyle(color: Colors.grey.shade700, fontSize: 12),
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: const [
+                    Icon(Icons.star_rounded, color: Color(0xFFFFB020), size: 18),
+                    SizedBox(width: 4),
+                    Text('4.8', style: TextStyle(fontWeight: FontWeight.w700)),
+                    SizedBox(width: 8),
+                    Text('• 2.3k views', style: TextStyle(color: Colors.black54)),
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
