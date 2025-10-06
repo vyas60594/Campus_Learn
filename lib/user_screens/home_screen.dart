@@ -3,7 +3,7 @@ import 'materials_page.dart';
 import 'announcements_page.dart';
 import 'qna_page.dart';
 import 'profile_page.dart';
-import '../ui_shared/app_theme.dart';
+import 'login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,59 +12,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _BrandLogo extends StatelessWidget {
-  final double size;
-  const _BrandLogo({this.size = 96});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x1A000000),
-            blurRadius: 24,
-            offset: Offset(0, 12),
-          ),
-        ],
-        borderRadius: BorderRadius.circular(size * 0.25),
-      ),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Container(
-            width: size,
-            height: size,
-            decoration: BoxDecoration(
-              color: AppTheme.primary,
-              borderRadius: BorderRadius.circular(size * 0.25),
-            ),
-            child: Icon(
-              Icons.school_rounded,
-              size: size * 0.45,
-              color: Colors.white,
-            ),
-          ),
-          Positioned(
-            right: size * 0.08,
-            top: size * 0.08,
-            child: Container(
-              width: size * 0.12,
-              height: size * 0.29,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFFD54F),
-                borderRadius: BorderRadius.circular(size * 0.08),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class _HomeScreenState extends State<HomeScreen> {
-  // Keeps track of the currently selected tab
+  // Keeps track of which bottom navigation tab is currently selected
   int _currentIndex = 0;
 
   // Colors to keep a consistent brand look
@@ -77,9 +26,182 @@ class _HomeScreenState extends State<HomeScreen> {
   static const String announceAsset = 'assets/images/icon_announce.png';
   static const String qaAsset = 'assets/images/icon_qa.png';
 
+  // Shows profile menu with logout option
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Profile icon
+                Container(
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [Color(0xFF273645), Color(0xFF3A4F63)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: const Icon(
+                    Icons.person_rounded,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Account Options',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF273645),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Logout option
+                InkWell(
+                  onTap: () {
+                    Navigator.of(dialogContext).pop();
+                    _showConfirmLogoutDialog(context);
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFFFEBEE),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(
+                            Icons.logout_rounded,
+                            color: Color(0xFFD32F2F),
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        const Text(
+                          'Logout',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF273645),
+                          ),
+                        ),
+                        const Spacer(),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 16,
+                          color: Colors.grey.shade400,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                // Cancel button
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop();
+                  },
+                  child: const Text(
+                    'Cancel',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Shows confirmation dialog for logout
+  void _showConfirmLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: const Text(
+            'Confirm Logout',
+            style: TextStyle(
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF273645),
+            ),
+          ),
+          content: const Text(
+            'Are you sure you want to logout?',
+            style: TextStyle(fontSize: 15),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFD32F2F),
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              ),
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                // Navigate directly to login screen and remove all previous routes
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                    builder: (context) => const LoginScreen(),
+                  ),
+                  (route) => false,
+                );
+              },
+              child: const Text(
+                'Logout',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // A simple list of tab widgets so it's easy to manage
+    // List of all the pages that correspond to each bottom navigation tab
     final List<Widget> tabs = [
       _HomeTab(
         avatarAsset: avatarAsset,
@@ -95,73 +217,156 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: bg,
+      // Professional and modern app bar design
       appBar: AppBar(
-        backgroundColor: bg,
+        backgroundColor: Colors.white,
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         automaticallyImplyLeading: false,
-        centerTitle: false,
-        titleSpacing: 16,
-        title: Row(
-          children: const [
-            _BrandLogo(size: 40),
-            SizedBox(width: 12),
-            Text(
-              'CampusLearn',
-              style: TextStyle(
-                color: Color(0xFF1D2733),
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
+        toolbarHeight: 70,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
               ),
-            ),
-          ],
-        ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: GestureDetector(
-              onTap: () {
-                setState(() => _currentIndex = 4); // go to Profile tab
-              },
-              child: Container(
-                width: 42,
-                height: 42,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Colors.white,
-                  border: Border.all(color: Colors.grey.shade300, width: 2),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color(0x12000000),
-                      blurRadius: 10,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: ClipOval(
-                  child: Image.asset(
-                    avatarAsset,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) =>
-                        const Icon(Icons.person, color: Color(0xFF1D2733)),
+            ],
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              child: Row(
+                children: [
+                  // Brand logo and name - matching splash/login screen design
+                  Row(
+                    children: [
+                      Stack(
+                        children: [
+                          Container(
+                            width: 44,
+                            height: 44,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF273645),
+                              borderRadius: BorderRadius.circular(12),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(0xFF273645).withOpacity(0.3),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.school_rounded,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                          ),
+                          Positioned(
+                            right: 4,
+                            top: 4,
+                            child: Container(
+                              width: 8,
+                              height: 16,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFFD54F),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(width: 12),
+                      const Text(
+                        'CampusLearn',
+                        style: TextStyle(
+                          color: Color(0xFF1D2733),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -0.5,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
+                  const Spacer(),
+                  // Action buttons
+                  Row(
+                    children: [
+                      // Notification button
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF5F6F8),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.notifications_outlined,
+                            color: Color(0xFF273645),
+                            size: 22,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      // Profile avatar - shows logout dialog on tap
+                      GestureDetector(
+                        onTap: () {
+                          _showLogoutDialog(context);
+                        },
+                        child: Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF273645), Color(0xFF3A4F63)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(0xFF273645).withOpacity(0.2),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.asset(
+                              avatarAsset,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => const Icon(
+                                Icons.person_rounded,
+                                color: Colors.white,
+                                size: 24,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
-        ],
-        bottom: const PreferredSize(
-          preferredSize: Size.fromHeight(0.5),
-          child: Divider(height: 0.5, thickness: 0.5),
         ),
       ),
+      // Display the currently selected tab's page
       body: tabs[_currentIndex],
+      // Bottom navigation bar with 5 tabs
       bottomNavigationBar: NavigationBar(
         height: 70,
         backgroundColor: Colors.white,
         indicatorColor: darkCard.withOpacity(0.08),
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         selectedIndex: _currentIndex,
+        // When a tab is tapped, update the current index
         onDestinationSelected: (index) {
           setState(() => _currentIndex = index);
         },
@@ -231,21 +436,20 @@ class _HomeTab extends StatelessWidget {
 
           // Category chips
           const _CategoryChips(
-              categories: [
-                'All',
-                'Programming',
-                'Math',
-                'Electronics',
-                'Physics',
-                'English',
-                'Business'
-              ],
-            ),
+            categories: [
+              'All',
+              'Programming',
+              'Math',
+              'Electronics',
+              'Physics',
+              'English',
+              'Business'
+            ],
+          ),
           const SizedBox(height: 20),
 
           // Featured materials
-          _SectionHeader(
-              title: 'Featured Materials', actionText: 'See all'),
+          _SectionHeader(title: 'Featured Materials', actionText: 'See all'),
           const SizedBox(height: 12),
           _FeaturedScroller(
             cards: [
@@ -344,6 +548,7 @@ class _AssetIcon extends StatelessWidget {
   }
 }
 
+// Individual update item widget - displays a single recent update
 class _UpdateItem extends StatelessWidget {
   final _AssetIcon icon;
   final String title;
@@ -411,6 +616,7 @@ class _UpdateItem extends StatelessWidget {
 
 // --- New UI building blocks ---
 
+// Section header widget - displays a title with an action button
 class _SectionHeader extends StatelessWidget {
   final String title;
   final String actionText;
@@ -438,42 +644,60 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
+// Search bar widget - allows users to search for materials
 class _SearchCard extends StatelessWidget {
   const _SearchCard();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+      height: 56,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.grey.shade300, width: 1.5),
         boxShadow: const [
           BoxShadow(
-            color: Color(0x12000000),
-            blurRadius: 20,
-            offset: Offset(0, 8),
+            color: Color(0x08000000),
+            blurRadius: 12,
+            offset: Offset(0, 4),
           ),
         ],
       ),
       child: Row(
         children: [
+          // Search icon on the left
+          const SizedBox(width: 16),
+          const Icon(Icons.search_rounded, color: Color(0xFF273645), size: 24),
           const SizedBox(width: 12),
-          const Icon(Icons.search_rounded, color: Colors.black54, size: 22),
-          const SizedBox(width: 12),
-          const Expanded(
-            child: Text(
-              'Search subjects, notes, papers...',
-              style: TextStyle(color: Colors.black54, fontSize: 16),
+
+          // Search text field
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Search subjects, notes, papers...',
+                hintStyle: TextStyle(
+                  color: Colors.grey.shade500,
+                  fontSize: 15,
+                ),
+                border: InputBorder.none,
+              ),
             ),
           ),
+
+          // Filter button on the right
           Container(
-            padding: const EdgeInsets.all(8),
+            margin: const EdgeInsets.only(right: 8),
+            padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: const Color(0xFF273645).withOpacity(0.05),
-              borderRadius: BorderRadius.circular(12),
+              color: const Color(0xFF273645),
+              borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Icons.tune_rounded, color: Color(0xFF273645)),
+            child: const Icon(
+              Icons.tune_rounded,
+              color: Colors.white,
+              size: 20,
+            ),
           ),
         ],
       ),
@@ -481,6 +705,7 @@ class _SearchCard extends StatelessWidget {
   }
 }
 
+// Category chips widget - displays horizontal scrollable category filters
 class _CategoryChips extends StatelessWidget {
   final List<String> categories;
   const _CategoryChips({required this.categories});
@@ -494,7 +719,8 @@ class _CategoryChips extends StatelessWidget {
         itemCount: categories.length,
         separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
-          final isPrimary = index == 0; // "All"
+          // First chip ("All") is highlighted as the selected category
+          final isPrimary = index == 0;
           return Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
@@ -704,65 +930,103 @@ class _ProfileTab extends StatelessWidget {
   }
 }
 
-
+// Welcome header widget - displays user's name and avatar
 class _WelcomeHeader extends StatelessWidget {
   const _WelcomeHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 52,
-          height: 52,
-          decoration: BoxDecoration(
-            color: const Color.fromARGB(255, 24, 50, 48),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: const [
-              BoxShadow(
-                color: Color(0x1A000000),
-                blurRadius: 16,
-                offset: Offset(0, 8),
-              ),
-            ],
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF4F46E5).withOpacity(0.3),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
           ),
-          alignment: Alignment.center,
-          child: const Text(
-            'R',
-            style: TextStyle(
+        ],
+      ),
+      child: Row(
+        children: [
+          // User avatar with initial - modern design
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
               color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            alignment: Alignment.center,
+            child: const Text(
+              'R',
+              style: TextStyle(
+                color: Color(0xFF4F46E5),
+                fontSize: 26,
+                fontWeight: FontWeight.w900,
+              ),
             ),
           ),
-        ),
-        const SizedBox(width: 16),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Welcome back,',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
+          const SizedBox(width: 16),
+          // Welcome text and user name
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Welcome back,',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.9),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                const Text(
+                  'Rajan Vyas',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -0.5,
+                  ),
+                ),
+              ],
             ),
-            const Text(
-              'Rajan Vyas',
-              style: TextStyle(
-                color: Color(0xFF1D2733),
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+          ),
+          // Decorative icon
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12),
             ),
-          ],
-        ),
-      ],
+            child: const Icon(
+              Icons.waving_hand_rounded,
+              color: Colors.white,
+              size: 24,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
+// Horizontal scrollable list of featured material cards
 class _FeaturedScroller extends StatelessWidget {
   final List<_FeaturedCardData> cards;
   const _FeaturedScroller({required this.cards});
@@ -784,6 +1048,7 @@ class _FeaturedScroller extends StatelessWidget {
   }
 }
 
+// Individual featured material card
 class _FeaturedCard extends StatelessWidget {
   final _FeaturedCardData data;
   const _FeaturedCard({required this.data});

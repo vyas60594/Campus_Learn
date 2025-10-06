@@ -18,12 +18,38 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _obscurePassword = true;
+  bool _emailHasError = false;
+  bool _passwordHasError = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  // Method to handle user login
+  void _loginUser() {
+    // Validate the form and update error states
+    setState(() {
+      _emailHasError = false;
+      _passwordHasError = false;
+    });
+
+    if (_formKey.currentState!.validate()) {
+      // On successful validation, navigate to the home screen
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    } else {
+      // Update error states if validation fails
+      setState(() {
+        _emailHasError = _emailController.text.trim().isEmpty || 
+                         !_emailController.text.contains('@');
+        _passwordHasError = _passwordController.text.isEmpty || 
+                           _passwordController.text.length < 6;
+      });
+    }
   }
 
   @override
@@ -114,16 +140,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: InputDecoration(
                         labelText: 'Email',
                         hintText: 'you@example.com',
-                        prefixIcon: const Icon(Icons.email_outlined),
+                        prefixIcon: Icon(
+                          Icons.email_outlined,
+                          color: _emailHasError ? Colors.red : null,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
                       validator: (value) {
-                        final text = value?.trim() ?? '';
-                        if (text.isEmpty) return 'Please enter your email';
-                        if (!text.contains('@'))
+                        // Check if the input is null or empty
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        // Check if the email contains the '@' symbol
+                        if (!value.contains('@')) {
                           return 'Please enter a valid email';
+                        }
+                        // Return null if the input is valid
                         return null;
                       },
                     ),
@@ -133,7 +167,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
                         labelText: 'Password',
-                        prefixIcon: const Icon(Icons.lock_outline),
+                        prefixIcon: Icon(
+                          Icons.lock_outline,
+                          color: _passwordHasError ? Colors.red : null,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -151,14 +188,20 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       validator: (value) {
-                        final text = value ?? '';
-                        if (text.isEmpty) return 'Please enter your password';
-                        if (text.length < 6)
+                        // Check if the input is null or empty
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        // Check if the password has at least 6 characters
+                        if (value.length < 6) {
                           return 'Password must be at least 6 characters';
+                        }
+                        // Return null if the input is valid
                         return null;
                       },
                     ),
                     const SizedBox(height: 12),
+                    // Forgot password button
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
@@ -173,6 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 4),
+                    // Login button
                     SizedBox(
                       width: double.infinity,
                       height: 52,
@@ -185,37 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           elevation: 0,
                         ),
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            Navigator.of(context).pushReplacement(
-                              PageRouteBuilder(
-                                transitionDuration:
-                                    const Duration(milliseconds: 450),
-                                pageBuilder:
-                                    (context, animation, secondaryAnimation) =>
-                                        const HomeScreen(),
-                                transitionsBuilder: (context, animation,
-                                    secondaryAnimation, child) {
-                                  final curved = CurvedAnimation(
-                                      parent: animation,
-                                      curve: Curves.easeOutCubic);
-                                  final offsetTween = Tween<Offset>(
-                                          begin: const Offset(0, 0.03),
-                                          end: Offset.zero)
-                                      .chain(CurveTween(
-                                          curve: Curves.easeOutCubic));
-                                  return FadeTransition(
-                                    opacity: curved,
-                                    child: SlideTransition(
-                                      position: curved.drive(offsetTween),
-                                      child: child,
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
-                          }
-                        },
+                        onPressed: _loginUser,
                         child: const Text(
                           'Sign In',
                           style: TextStyle(
@@ -235,6 +249,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                     const SizedBox(height: 16),
+                    // Button to navigate to the signup screen
                     SizedBox(
                       width: double.infinity,
                       height: 48,
@@ -255,6 +270,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 12),
+                    // Button to navigate to the admin login screen
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).push(

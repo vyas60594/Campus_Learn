@@ -11,7 +11,6 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
-  bool _submitting = false;
 
   @override
   void dispose() {
@@ -19,30 +18,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
-  Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) return;
-    setState(() {
-      _submitting = true;
-    });
-    await Future<void>.delayed(const Duration(milliseconds: 900));
-    if (!mounted) return;
-    setState(() {
-      _submitting = false;
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('If an account exists, a reset link was sent.'),
-      ),
-    );
-    // Navigate to OTP verification UI
-    // In real app, the backend would send the OTP to this email
-    if (!mounted) return;
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) =>
-            OtpVerificationScreen(email: _emailController.text.trim()),
-      ),
-    );
+  // Method to handle form submission
+  void _submit() {
+    // First, validate the form. If it's valid, navigate to the OTP screen.
+    if (_formKey.currentState!.validate()) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) =>
+              OtpVerificationScreen(email: _emailController.text.trim()),
+        ),
+      );
+    }
   }
 
   @override
@@ -60,6 +46,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
       ),
       body: SafeArea(
+        // GestureDetector to dismiss the keyboard when tapping outside of a text field
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: SingleChildScrollView(
@@ -111,20 +98,23 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         decoration: InputDecoration(
                           labelText: 'Email address',
                           hintText: 'you@example.com',
-                          helperText:
-                              'We\'ll only use this to send the reset link.',
+                          //helperText:
+                          // 'We\'ll only use this to send the reset link.',
                           prefixIcon: const Icon(Icons.email_outlined),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                         validator: (value) {
-                          final text = value?.trim() ?? '';
-                          if (text.isEmpty) return 'Please enter your email';
-                          final basicEmail =
-                              RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
-                          if (!basicEmail.hasMatch(text))
+                          // Check if the input is null or empty
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Please enter your email';
+                          }
+                          // Simple check for a valid email format
+                          if (!value.contains('@') || !value.contains('.')) {
                             return 'Enter a valid email (e.g. name@mail.com)';
+                          }
+                          // Return null if the input is valid
                           return null;
                         },
                         onFieldSubmitted: (_) => _submit(),
@@ -142,34 +132,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             ),
                             elevation: 0,
                           ),
-                          onPressed: _submitting ? null : _submit,
-                          child: _submitting
-                              ? const SizedBox(
-                                  width: 22,
-                                  height: 22,
-                                  child: CircularProgressIndicator(
-                                      strokeWidth: 2, color: Colors.white),
-                                )
-                              : const Text(
-                                  'Send reset link',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600),
-                                ),
+                          onPressed: _submit,
+                          child: const Text(
+                            'Send reset link',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 14),
-                      Text(
-                        'Tip: Check your spam folder if you don\'t see the email in a few minutes.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 13, color: Colors.grey.shade600),
-                      ),
-                      const SizedBox(height: 8),
-                      TextButton(
-                        onPressed: () => Navigator.of(context).maybePop(),
-                        child: const Text('Back to sign in'),
-                      ),
                     ],
                   ),
                 ),
