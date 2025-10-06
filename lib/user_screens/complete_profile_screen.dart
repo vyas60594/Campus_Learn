@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
+import 'login_screen.dart';
 
 class CompleteProfileScreen extends StatefulWidget {
   const CompleteProfileScreen({super.key});
@@ -136,9 +136,18 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
                         ),
                         onPressed: () {
                           if (_formKey.currentState!.validate()) {
+                            // Show success message
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Profile completed successfully! Please login to continue.'),
+                                backgroundColor: Color(0xFF4CAF50),
+                                duration: Duration(seconds: 3),
+                              ),
+                            );
+                            // Navigate to login screen after signup completion
                             Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
-                                builder: (_) => const HomeScreen(),
+                                builder: (_) => const LoginScreen(),
                               ),
                               (route) => false,
                             );
