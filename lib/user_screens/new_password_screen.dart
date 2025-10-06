@@ -14,7 +14,6 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
   final TextEditingController _confirmController = TextEditingController();
   bool _obscure1 = true;
   bool _obscure2 = true;
-  bool _updating = false;
 
   @override
   void dispose() {
@@ -23,15 +22,33 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
     super.dispose();
   }
 
-  Future<void> _update() async {
+  // Updates the user's password
+  // Toggles the visibility of the password field
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscure1 = !_obscure1;
+    });
+  }
+
+  // Toggles the visibility of the confirm password field
+  void _toggleConfirmPasswordVisibility() {
+    setState(() {
+      _obscure2 = !_obscure2;
+    });
+  }
+
+  // Updates the user's password
+  void _update() {
+    // First, validate the form
     if (!_formKey.currentState!.validate()) return;
-    setState(() => _updating = true);
-    await Future<void>.delayed(const Duration(milliseconds: 900));
-    if (!mounted) return;
-    setState(() => _updating = false);
+
+    // For this demo, we'll just show a success message and navigate back to the login screen.
+    // In a real app, you would make a network request to update the password.
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Password updated (demo)')),
     );
+
+    // Navigate back to the first screen in the stack (usually the login screen)
     Navigator.of(context).popUntil((route) => route.isFirst);
   }
 
@@ -100,17 +117,21 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                             icon: Icon(_obscure1
                                 ? Icons.visibility_off_outlined
                                 : Icons.visibility_outlined),
-                            onPressed: () =>
-                                setState(() => _obscure1 = !_obscure1),
+                            onPressed: _togglePasswordVisibility,
                           ),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(14)),
                         ),
-                        validator: (v) {
-                          final text = v?.trim() ?? '';
-                          if (text.isEmpty) return 'Please enter a password';
-                          if (text.length < 6)
+                        validator: (value) {
+                          // Check if the input is null or empty
+                          if (value == null || value.trim().isEmpty) {
+                            return 'Please enter a password';
+                          }
+                          // Check if the password has at least 6 characters
+                          if (value.length < 6) {
                             return 'Use at least 6 characters';
+                          }
+                          // Return null if the input is valid
                           return null;
                         },
                       ),
@@ -127,15 +148,17 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                             icon: Icon(_obscure2
                                 ? Icons.visibility_off_outlined
                                 : Icons.visibility_outlined),
-                            onPressed: () =>
-                                setState(() => _obscure2 = !_obscure2),
+                            onPressed: _toggleConfirmPasswordVisibility,
                           ),
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(14)),
                         ),
-                        validator: (v) {
-                          if (v != _passwordController.text)
+                        validator: (value) {
+                          // Check if the confirmed password matches the original password
+                          if (value != _passwordController.text) {
                             return 'Passwords do not match';
+                          }
+                          // Return null if the input is valid
                           return null;
                         },
                       ),
@@ -151,17 +174,11 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                                 borderRadius: BorderRadius.circular(28)),
                             elevation: 0,
                           ),
-                          onPressed: _updating ? null : _update,
-                          child: _updating
-                              ? const SizedBox(
-                                  width: 22,
-                                  height: 22,
-                                  child: CircularProgressIndicator(
-                                      strokeWidth: 2, color: Colors.white))
-                              : const Text('Update Password',
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700)),
+                          onPressed: _update,
+                          child: const Text('Update Password',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700)),
                         ),
                       ),
                     ],
