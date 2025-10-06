@@ -205,39 +205,6 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
                       const SizedBox(height: 16),
 
-                      // Demo info
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(12),
-                          border:
-                              Border.all(color: Colors.blue.withOpacity(0.3)),
-                        ),
-                        child: Column(
-                          children: [
-                            const Icon(Icons.info,
-                                color: Colors.blue, size: 24),
-                            const SizedBox(height: 8),
-                            const Text(
-                              'Demo Admin Access',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: Colors.blue,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Use any email with password: admin123',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.blue.shade700,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
                       const SizedBox(height: 24),
 
                       // Back to user app
