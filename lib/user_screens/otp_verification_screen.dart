@@ -15,7 +15,6 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
   final List<TextEditingController> _controllers =
       List.generate(_digits, (_) => TextEditingController());
   final List<FocusNode> _nodes = List.generate(_digits, (_) => FocusNode());
-  bool _verifying = false;
 
   @override
   void dispose() {
@@ -30,29 +29,36 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
   String get _code => _controllers.map((c) => c.text).join();
 
+  // Handles moving focus between OTP fields automatically
   void _onChanged(int index, String value) {
+    // When a digit is entered, move to the next field
     if (value.length == 1 && index < _digits - 1) {
       _nodes[index + 1].requestFocus();
-    } else if (value.isEmpty && index > 0) {
+    }
+    // When a digit is deleted, move to the previous field
+    else if (value.isEmpty && index > 0) {
       _nodes[index - 1].requestFocus();
     }
+    // Rebuild the widget to update the UI
     setState(() {});
   }
 
-  Future<void> _verify() async {
+  // Verifies the entered OTP code
+  void _verify() {
+    // Check if the code is complete
     if (_code.length != _digits) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter the 4-digit code.')),
       );
       return;
     }
-    setState(() => _verifying = true);
-    await Future<void>.delayed(const Duration(milliseconds: 900));
-    if (!mounted) return;
-    setState(() => _verifying = false);
+
+    // For this demo, we'll just show a success message and navigate.
+    // In a real app, you would make a network request to verify the code.
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Code verified (demo). Proceed to reset.')),
     );
+
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => NewPasswordScreen(email: widget.email),
@@ -60,17 +66,22 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     );
   }
 
+  // Simulates resending the OTP email
   void _resend() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Resent email to ${widget.email} (demo)')),
     );
   }
 
+  // Masks the user's email for display (e.g., us•••@example.com)
   String _maskedEmail(String email) {
-    final at = email.indexOf('@');
-    if (at <= 2) return email;
+    final atIndex = email.indexOf('@');
+    if (atIndex <= 2) {
+      // If the email username is too short to mask, return it as is
+      return email;
+    }
     final start = email.substring(0, 2);
-    final end = email.substring(at);
+    final end = email.substring(atIndex);
     return '$start•••$end';
   }
 
@@ -190,16 +201,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           borderRadius: BorderRadius.circular(28)),
                       elevation: 0,
                     ),
-                    onPressed: _verifying ? null : _verify,
-                    child: _verifying
-                        ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                                strokeWidth: 2, color: Colors.white))
-                        : const Text('Verify code',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w700)),
+                    onPressed: _verify,
+                    child: const Text('Verify code',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w700)),
                   ),
                 ),
                 const SizedBox(height: 18),
