@@ -10,28 +10,38 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool _navigated = false;
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2), () {
-      if (!mounted) return;
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const LoginScreen(),
-        ),
-      );
+    // Show splash screen for maximum 3 seconds
+    Future.delayed(const Duration(seconds: 3), () {
+      _navigateToLogin();
     });
+  }
+
+  void _navigateToLogin() {
+    if (!mounted || _navigated) return;
+    _navigated = true;
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) => const LoginScreen(),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+      body: GestureDetector(
+        onTap: _navigateToLogin,
+        child: SafeArea(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
               const _BrandLogo(),
               const SizedBox(height: 28),
               Text(
@@ -50,6 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ],
           ),
+        ),
         ),
       ),
     );
