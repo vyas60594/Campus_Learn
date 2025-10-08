@@ -1,7 +1,6 @@
 // Attractive, beginner-friendly Profile page matching the provided reference.
 import 'package:flutter/material.dart';
 import 'edit_profile_page.dart';
-import 'login_screen.dart';
 
 const Color kDarkCard = Color(0xFF273645);
 
@@ -106,69 +105,42 @@ class _ProfilePageState extends State<ProfilePage> {
 
           const SizedBox(height: 16),
 
-          // Actions
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () async {
-                    final result = await Navigator.push<Map<String, dynamic>>(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => EditProfilePage(
-                          name: name,
-                          email: email,
-                          branch: branch,
-                          year: year,
-                        ),
-                      ),
-                    );
-                    if (result != null) {
-                      setState(() {
-                        name = (result['name'] as String?) ?? name;
-                        email = (result['email'] as String?) ?? email;
-                        branch = (result['branch'] as String?) ?? branch;
-                        year = (result['year'] as String?) ?? year;
-                      });
-                    }
-                  },
-                  icon: const Icon(Icons.edit_rounded),
-                  label: const Text('Edit Profile'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF3865F3),
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+          // Edit Profile Button
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () async {
+                final result = await Navigator.push<Map<String, dynamic>>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => EditProfilePage(
+                      name: name,
+                      email: email,
+                      branch: branch,
+                      year: year,
+                    ),
                   ),
-                ),
+                );
+                if (result != null) {
+                  setState(() {
+                    name = (result['name'] as String?) ?? name;
+                    email = (result['email'] as String?) ?? email;
+                    branch = (result['branch'] as String?) ?? branch;
+                    year = (result['year'] as String?) ?? year;
+                  });
+                }
+              },
+              icon: const Icon(Icons.edit_rounded),
+              label: const Text('Edit Profile'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF3865F3),
+                foregroundColor: Colors.white,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    // Navigate to LoginScreen and clear navigation stack
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (_) => const LoginScreen(),
-                      ),
-                      (route) => false,
-                    );
-                  },
-                  icon: const Icon(Icons.logout_rounded),
-                  label: const Text('Logout'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFE11D48),
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ],
       ),
