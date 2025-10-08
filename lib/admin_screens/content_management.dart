@@ -18,6 +18,7 @@ class _ContentManagementState extends State<ContentManagement> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        automaticallyImplyLeading: false,
         title: const Text(
           'Content Management',
           style: TextStyle(
