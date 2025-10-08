@@ -33,15 +33,6 @@ class _UserManagementState extends State<UserManagement> {
       avatar: 'assets/images/avatar2.png',
     ),
     _User(
-      id: '3',
-      name: 'Dr. Mike Johnson',
-      email: 'mike@example.com',
-      role: 'Teacher',
-      status: 'Active',
-      joinDate: '2024-01-10',
-      avatar: 'assets/images/avatar3.png',
-    ),
-    _User(
       id: '4',
       name: 'Sarah Wilson',
       email: 'sarah@example.com',
@@ -70,6 +61,7 @@ class _UserManagementState extends State<UserManagement> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        automaticallyImplyLeading: false,
         title: const Text(
           'User Management',
           style: TextStyle(
@@ -120,7 +112,7 @@ class _UserManagementState extends State<UserManagement> {
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: ['All', 'Student', 'Teacher', 'Admin'].map((filter) {
+                    children: ['All', 'Student', 'Admin'].map((filter) {
                       final isSelected = _selectedFilter == filter;
                       return Padding(
                         padding: const EdgeInsets.only(right: 8),
@@ -404,8 +396,6 @@ class _UserCard extends StatelessWidget {
     switch (role) {
       case 'Student':
         return Colors.blue;
-      case 'Teacher':
-        return Colors.green;
       case 'Admin':
         return Colors.purple;
       default:
