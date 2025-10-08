@@ -20,11 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const Color darkCard = Color(0xFF273645);
   static const Color bg = Color(0xFFF4F6F8); // subtle page background
 
-  // Example assets — replace these with your real paths in pubspec.yaml
-  static const String avatarAsset = 'assets/images/avatar.png';
-  static const String bookAsset = 'assets/images/icon_book.png';
-  static const String announceAsset = 'assets/images/icon_announce.png';
-  static const String qaAsset = 'assets/images/icon_qa.png';
+  // Using icons instead of assets to avoid missing file errors
 
   // Shows profile menu with logout option
   void _showLogoutDialog(BuildContext context) {
@@ -203,12 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     // List of all the pages that correspond to each bottom navigation tab
     final List<Widget> tabs = [
-      _HomeTab(
-        avatarAsset: avatarAsset,
-        bookAsset: bookAsset,
-        announceAsset: announceAsset,
-        qaAsset: qaAsset,
-      ),
+      const _HomeTab(),
       const _MaterialsTab(),
       const _AnnouncementsTab(),
       const _QnATab(),
@@ -335,17 +326,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ],
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              avatarAsset,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => const Icon(
-                                Icons.person_rounded,
-                                color: Colors.white,
-                                size: 24,
-                              ),
-                            ),
+                          child: const Icon(
+                            Icons.person_rounded,
+                            color: Colors.white,
+                            size: 24,
                           ),
                         ),
                       ),
@@ -404,18 +388,79 @@ class _HomeScreenState extends State<HomeScreen> {
 
 // --- Tabs ---
 
-class _HomeTab extends StatelessWidget {
-  final String avatarAsset;
-  final String bookAsset;
-  final String announceAsset;
-  final String qaAsset;
+class _HomeTab extends StatefulWidget {
+  const _HomeTab();
 
-  const _HomeTab({
-    required this.avatarAsset,
-    required this.bookAsset,
-    required this.announceAsset,
-    required this.qaAsset,
-  });
+  @override
+  State<_HomeTab> createState() => _HomeTabState();
+}
+
+class _HomeTabState extends State<_HomeTab> {
+  // Currently selected category for filtering
+  String _selectedCategory = 'All';
+
+  // All available materials with their categories
+  final List<_FeaturedCardData> _allMaterials = [
+    _FeaturedCardData(
+      title: 'Python: OOP Essentials',
+      subtitle: 'CS • Notes • 24 pages',
+      icon: Icons.code_rounded,
+      color: const Color(0xFF4F46E5),
+      category: 'Programming',
+    ),
+    _FeaturedCardData(
+      title: 'Digital Circuits Cheat Sheet',
+      subtitle: 'ECE • PDF • 6 pages',
+      icon: Icons.memory_rounded,
+      color: const Color(0xFF0EA5E9),
+      category: 'Electronics',
+    ),
+    _FeaturedCardData(
+      title: 'Calculus – Integrals',
+      subtitle: 'Math • Notes • 18 pages',
+      icon: Icons.functions_rounded,
+      color: const Color(0xFF10B981),
+      category: 'Math',
+    ),
+    _FeaturedCardData(
+      title: 'Java Programming Guide',
+      subtitle: 'CS • Tutorial • 45 pages',
+      icon: Icons.code_rounded,
+      color: const Color(0xFF8B5CF6),
+      category: 'Programming',
+    ),
+    _FeaturedCardData(
+      title: 'Physics: Mechanics',
+      subtitle: 'Physics • Notes • 32 pages',
+      icon: Icons.science_rounded,
+      color: const Color(0xFFEC4899),
+      category: 'Physics',
+    ),
+    _FeaturedCardData(
+      title: 'Business Strategy 101',
+      subtitle: 'Business • Guide • 28 pages',
+      icon: Icons.business_rounded,
+      color: const Color(0xFFF59E0B),
+      category: 'Business',
+    ),
+    _FeaturedCardData(
+      title: 'English Grammar Basics',
+      subtitle: 'English • Reference • 20 pages',
+      icon: Icons.book_rounded,
+      color: const Color(0xFF06B6D4),
+      category: 'English',
+    ),
+  ];
+
+  // Get filtered materials based on selected category
+  List<_FeaturedCardData> get _filteredMaterials {
+    if (_selectedCategory == 'All') {
+      return _allMaterials;
+    }
+    return _allMaterials
+        .where((material) => material.category == _selectedCategory)
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -434,9 +479,9 @@ class _HomeTab extends StatelessWidget {
 
           const SizedBox(height: 12),
 
-          // Category chips
-          const _CategoryChips(
-            categories: [
+          // Category chips with filter functionality
+          _CategoryChips(
+            categories: const [
               'All',
               'Programming',
               'Math',
@@ -445,34 +490,48 @@ class _HomeTab extends StatelessWidget {
               'English',
               'Business'
             ],
+            selectedCategory: _selectedCategory,
+            onCategorySelected: (category) {
+              setState(() {
+                _selectedCategory = category;
+              });
+            },
           ),
           const SizedBox(height: 20),
 
-          // Featured materials
-          _SectionHeader(title: 'Featured Materials', actionText: 'See all'),
-          const SizedBox(height: 12),
-          _FeaturedScroller(
-            cards: [
-              _FeaturedCardData(
-                title: 'Python: OOP Essentials',
-                subtitle: 'CS • Notes • 24 pages',
-                icon: Icons.code_rounded,
-                color: const Color(0xFF4F46E5),
-              ),
-              _FeaturedCardData(
-                title: 'Digital Circuits Cheat Sheet',
-                subtitle: 'ECE • PDF • 6 pages',
-                icon: Icons.memory_rounded,
-                color: const Color(0xFF0EA5E9),
-              ),
-              _FeaturedCardData(
-                title: 'Calculus – Integrals',
-                subtitle: 'Math • Notes • 18 pages',
-                icon: Icons.functions_rounded,
-                color: const Color(0xFF10B981),
-              ),
-            ],
+          // Featured materials - filtered by selected category
+          _SectionHeader(
+            title: _selectedCategory == 'All'
+                ? 'Featured Materials'
+                : '$_selectedCategory Materials',
+            actionText: 'See all',
           ),
+          const SizedBox(height: 12),
+          _filteredMaterials.isEmpty
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.search_off_rounded,
+                          size: 64,
+                          color: Colors.grey.shade400,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'No materials found in $_selectedCategory',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey.shade600,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : _FeaturedScroller(cards: _filteredMaterials),
 
           const SizedBox(height: 24),
 
@@ -495,26 +554,22 @@ class _HomeTab extends StatelessWidget {
             child: Column(
               children: [
                 _UpdateItem(
-                  icon: _AssetIcon(
-                      path: bookAsset, fallbackIcon: Icons.menu_book_rounded),
+                  icon: Icons.menu_book_rounded,
+                  iconColor: const Color(0xFF273645),
                   title: 'Python Notes - Chapter 5',
                   subtitle: 'Computer Science',
                   time: '6 hours ago',
                 ),
                 _UpdateItem(
-                  icon: _AssetIcon(
-                      path: announceAsset,
-                      fallbackIcon: Icons.campaign_rounded,
-                      color: Colors.green),
+                  icon: Icons.campaign_rounded,
+                  iconColor: Colors.green,
                   title: 'Mid-term Exam Schedule Released',
                   subtitle: 'All Departments',
                   time: '2 hours ago',
                 ),
                 _UpdateItem(
-                  icon: _AssetIcon(
-                      path: qaAsset,
-                      fallbackIcon: Icons.help_rounded,
-                      color: Colors.purple),
+                  icon: Icons.help_rounded,
+                  iconColor: Colors.purple,
                   title: 'New Q&A: OOPS Concept',
                   subtitle: 'Java',
                   time: '1 hour ago',
@@ -528,34 +583,16 @@ class _HomeTab extends StatelessWidget {
   }
 }
 
-class _AssetIcon extends StatelessWidget {
-  final String path;
-  final IconData fallbackIcon;
-  final Color? color;
-  const _AssetIcon(
-      {required this.path, required this.fallbackIcon, this.color});
-
-  @override
-  Widget build(BuildContext context) {
-    return Image.asset(
-      path,
-      width: 24,
-      height: 24,
-      color: color,
-      errorBuilder: (_, __, ___) =>
-          Icon(fallbackIcon, color: color ?? const Color(0xFF273645)),
-    );
-  }
-}
-
 // Individual update item widget - displays a single recent update
 class _UpdateItem extends StatelessWidget {
-  final _AssetIcon icon;
+  final IconData icon;
+  final Color iconColor;
   final String title;
   final String subtitle;
   final String time;
   const _UpdateItem(
       {required this.icon,
+      required this.iconColor,
       required this.title,
       required this.subtitle,
       required this.time});
@@ -587,7 +624,7 @@ class _UpdateItem extends StatelessWidget {
                   ),
                 ],
               ),
-              child: icon,
+              child: Icon(icon, color: iconColor, size: 24),
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -708,7 +745,14 @@ class _SearchCard extends StatelessWidget {
 // Category chips widget - displays horizontal scrollable category filters
 class _CategoryChips extends StatelessWidget {
   final List<String> categories;
-  const _CategoryChips({required this.categories});
+  final String selectedCategory;
+  final Function(String) onCategorySelected;
+
+  const _CategoryChips({
+    required this.categories,
+    required this.selectedCategory,
+    required this.onCategorySelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -719,30 +763,40 @@ class _CategoryChips extends StatelessWidget {
         itemCount: categories.length,
         separatorBuilder: (_, __) => const SizedBox(width: 8),
         itemBuilder: (context, index) {
-          // First chip ("All") is highlighted as the selected category
-          final isPrimary = index == 0;
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: isPrimary ? const Color(0xFF273645) : Colors.white,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.grey.shade300),
-              boxShadow: isPrimary
-                  ? const [
-                      BoxShadow(
-                        color: Color(0x14000000),
-                        blurRadius: 12,
-                        offset: Offset(0, 6),
-                      ),
-                    ]
-                  : null,
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              categories[index],
-              style: TextStyle(
-                color: isPrimary ? Colors.white : const Color(0xFF273645),
-                fontWeight: FontWeight.w600,
+          final category = categories[index];
+          final isSelected = category == selectedCategory;
+          
+          return GestureDetector(
+            onTap: () => onCategorySelected(category),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: isSelected ? const Color(0xFF273645) : Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: isSelected
+                      ? const Color(0xFF273645)
+                      : Colors.grey.shade300,
+                  width: isSelected ? 2 : 1,
+                ),
+                boxShadow: isSelected
+                    ? const [
+                        BoxShadow(
+                          color: Color(0x14000000),
+                          blurRadius: 12,
+                          offset: Offset(0, 6),
+                        ),
+                      ]
+                    : null,
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                category,
+                style: TextStyle(
+                  color: isSelected ? Colors.white : const Color(0xFF273645),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
               ),
             ),
           );
@@ -757,11 +811,14 @@ class _FeaturedCardData {
   final String subtitle;
   final IconData icon;
   final Color color;
+  final String category;
+  
   _FeaturedCardData({
     required this.title,
     required this.subtitle,
     required this.icon,
     required this.color,
+    required this.category,
   });
 }
 
