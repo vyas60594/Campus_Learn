@@ -26,7 +26,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late TextEditingController _emailC;
   late String _branch;
   late String _year;
-  ImageProvider _avatar = const AssetImage('assets/images/avatar.png');
 
   final List<String> _branches = const [
     'Computer Science',
@@ -75,10 +74,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
             children: [
               const Text(
                 'Edit Profile',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: kDarkCard),
+                style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                    color: kDarkCard),
               ),
               const SizedBox(height: 4),
-              Text('Edit  your account information', style: TextStyle(color: Colors.grey.shade700)),
+              Text('Edit  your account information',
+                  style: TextStyle(color: Colors.grey.shade700)),
               const SizedBox(height: 16),
 
               // Avatar card
@@ -89,7 +92,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Colors.grey.shade300),
                   boxShadow: const [
-                    BoxShadow(color: Color(0x12000000), blurRadius: 18, offset: Offset(0, 10)),
+                    BoxShadow(
+                        color: Color(0x12000000),
+                        blurRadius: 18,
+                        offset: Offset(0, 10)),
                   ],
                 ),
                 padding: const EdgeInsets.all(16),
@@ -98,7 +104,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     Stack(
                       clipBehavior: Clip.none,
                       children: [
-                        CircleAvatar(radius: 48, backgroundImage: _avatar),
+                        CircleAvatar(
+                          radius: 48,
+                          backgroundImage: AssetImage(
+                              'assets/images/user_dashboard/profile.jpeg'),
+                          onBackgroundImageError: (_, __) {},
+                        ),
                         Positioned(
                           right: -4,
                           bottom: -4,
@@ -110,7 +121,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               onTap: _changeAvatar,
                               child: const Padding(
                                 padding: EdgeInsets.all(8),
-                                child: Icon(Icons.edit_rounded, color: Colors.white, size: 18),
+                                child: Icon(Icons.edit_rounded,
+                                    color: Colors.white, size: 18),
                               ),
                             ),
                           ),
@@ -118,9 +130,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ],
                     ),
                     const SizedBox(height: 12),
-                    Text(widget.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: kDarkCard)),
+                    Text(widget.name,
+                        style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            color: kDarkCard)),
                     const SizedBox(height: 4),
-                    Text(widget.email, style: const TextStyle(color: Colors.black54)),
+                    Text(widget.email,
+                        style: const TextStyle(color: Colors.black54)),
                   ],
                 ),
               ),
@@ -149,7 +166,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   textInputAction: TextInputAction.next,
                   decoration: _roundedDecoration('Enter your email'),
                   validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Please enter your email';
+                    if (v == null || v.trim().isEmpty)
+                      return 'Please enter your email';
                     if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(v)) {
                       return 'Please enter a valid email';
                     }
