@@ -16,13 +16,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // Add this state variable (starts disabled so validation does not show)
-  AutovalidateMode _autoValidateMode = AutovalidateMode.disabled;
-
   bool _obscurePassword = true;
-  bool _isLoading = false;
-  bool _emailHasError = false;
-  bool _passwordHasError = false;
+  bool _hasAttemptedSubmit = false;
 
   @override
   void dispose() {
@@ -31,35 +26,23 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     super.dispose();
   }
 
-  void _recomputeErrors() {
-    final emailError = Validators.email(_emailController.text);
-    final passError = Validators.password(_passwordController.text);
+  void _login() {
+    // Mark that user has attempted to submit
     setState(() {
-      _emailHasError = emailError != null;
-      _passwordHasError = passError != null;
+      _hasAttemptedSubmit = true;
     });
-  }
-
-  Future<void> _login() async {
+    
     if (!_formKey.currentState!.validate()) {
-      _recomputeErrors();
       return;
     }
-
-    setState(() => _isLoading = true);
-
-    // Simulate admin login check
-    await Future.delayed(const Duration(seconds: 2));
-
-    if (!mounted) return;
-
-    setState(() => _isLoading = false);
 
     // For demo: accept any email with password "admin123"
     if (_passwordController.text == 'admin123') {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => const AdminMainScreen(),
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => const AdminMainScreen(),
+          transitionDuration: Duration.zero,
+          reverseTransitionDuration: Duration.zero,
         ),
       );
     } else {
@@ -78,8 +61,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       backgroundColor: Colors.white,
       body: Form(
         key: _formKey,
-        // use the state variable here
-        autovalidateMode: _autoValidateMode,
+        autovalidateMode: AutovalidateMode.disabled,
         child: SafeArea(
           child: GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
@@ -153,14 +135,31 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                           hintText: 'admin@campuslearn.com',
                           prefixIcon: Icon(
                             Icons.email_outlined,
-                            color: _emailHasError ? Colors.red : null,
+                            color: _hasAttemptedSubmit && Validators.email(_emailController.text) != null ? Colors.red : null,
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
+                          enabledBorder: _hasAttemptedSubmit && Validators.email(_emailController.text) != null
+                              ? OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.red, width: 1.5),
+                                )
+                              : OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                          focusedBorder: _hasAttemptedSubmit && Validators.email(_emailController.text) != null
+                              ? OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.red, width: 2),
+                                )
+                              : OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: AppTheme.primary, width: 2),
+                                ),
                         ),
-                        validator: Validators.email,
-                        onChanged: (_) => _recomputeErrors(),
+                        validator: _hasAttemptedSubmit ? Validators.email : null,
+                        onChanged: (_) => setState(() {}),
                       ),
 
                       const SizedBox(height: 16),
@@ -173,11 +172,28 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                           labelText: 'Password',
                           prefixIcon: Icon(
                             Icons.lock_outline,
-                            color: _passwordHasError ? Colors.red : null,
+                            color: _hasAttemptedSubmit && Validators.password(_passwordController.text) != null ? Colors.red : null,
                           ),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
+                          enabledBorder: _hasAttemptedSubmit && Validators.password(_passwordController.text) != null
+                              ? OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.red, width: 1.5),
+                                )
+                              : OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                          focusedBorder: _hasAttemptedSubmit && Validators.password(_passwordController.text) != null
+                              ? OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(color: Colors.red, width: 2),
+                                )
+                              : OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(color: AppTheme.primary, width: 2),
+                                ),
                           suffixIcon: IconButton(
                             icon: Icon(
                               _obscurePassword
@@ -190,8 +206,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                             },
                           ),
                         ),
-                        validator: Validators.password,
-                        onChanged: (_) => _recomputeErrors(),
+                        validator: _hasAttemptedSubmit ? Validators.password : null,
+                        onChanged: (_) => setState(() {}),
                       ),
 
                       const SizedBox(height: 24),
@@ -199,7 +215,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                       // Login button
                       PrimaryButton(
                         label: 'Sign In as Admin',
-                        loading: _isLoading,
+                        loading: false,
                         onPressed: _login,
                       ),
 
