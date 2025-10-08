@@ -177,8 +177,7 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
                           onPressed: _update,
                           child: const Text('Update Password',
                               style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700)),
+                                  fontSize: 16, fontWeight: FontWeight.w700)),
                         ),
                       ),
                     ],
@@ -192,4 +191,3 @@ class _NewPasswordScreenState extends State<NewPasswordScreen> {
     );
   }
 }
-
