@@ -11,6 +11,7 @@ class AdminDashboard extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
+        automaticallyImplyLeading: false,
         title: const Text(
           'Admin Dashboard',
           style: TextStyle(
